@@ -111,6 +111,26 @@ describe("Pineapple Omi Worker", () => {
     expect(response.status).toBe(200);
     expect(await response.json()).toHaveProperty("notification");
   });
+
+  it("accepts Omi URLs that append uid with a second question mark", async () => {
+    const response = await SELF.fetch(
+      `https://worker.example/webhook?token=${token}?uid=user-nested&session_id=session-nested`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ segments: [{ text: "pineapple" }] })
+      }
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual({
+      session_id: "session-nested",
+      notification: {
+        prompt: "Tell {{user_name}}: Pineapple detected.",
+        params: ["user_name"]
+      }
+    });
+  });
 });
 
 function postWebhook(tokenValue: string, sessionId: string, uid: string, body: unknown): Promise<Response> {
