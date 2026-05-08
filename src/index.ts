@@ -101,7 +101,7 @@ async function handleWebhook(request: Request, env: Env): Promise<Response> {
     return json(response);
   }
 
-  const cooldownKey = url.searchParams.get("uid") || sessionId;
+  const cooldownKey = getUid(url) || sessionId;
   const gate = env.COOLDOWNS.getByName(cooldownKey);
   const shouldNotify = await gate.checkAndSet(cooldownKey, COOLDOWN_SECONDS);
 
@@ -148,12 +148,33 @@ function extractTranscript(segments: unknown[]): string {
 
 function isAuthorized(request: Request, expectedToken: string): boolean {
   const url = new URL(request.url);
-  const queryToken = url.searchParams.get("token");
+  const queryToken = getToken(url);
   const authHeader = request.headers.get("Authorization");
   const bearerToken = authHeader?.match(/^Bearer\s+(.+)$/i)?.[1];
   const suppliedToken = queryToken || bearerToken || "";
 
   return timingSafeEqual(suppliedToken, expectedToken);
+}
+
+function getToken(url: URL): string | null {
+  const queryToken = url.searchParams.get("token");
+
+  if (!queryToken) {
+    return null;
+  }
+
+  return queryToken.split("?")[0];
+}
+
+function getUid(url: URL): string | null {
+  const uid = url.searchParams.get("uid");
+
+  if (uid) {
+    return uid;
+  }
+
+  const nestedUid = url.searchParams.get("token")?.match(/[?&]uid=([^&]+)/)?.[1];
+  return nestedUid ? decodeURIComponent(nestedUid) : null;
 }
 
 function timingSafeEqual(a: string, b: string): boolean {
