@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "pineapple-omi-worker-test",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "WEBHOOK_TOKEN": "test-token"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "COOLDOWNS",
+        "class_name": "CooldownGate"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["CooldownGate"]
+    }
+  ]
+}

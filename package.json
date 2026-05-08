@@ -1,0 +1,22 @@
+{
+  "name": "pineapple-omi-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log wrangler dev",
+    "deploy": "WRANGLER_LOG_PATH=.wrangler/wrangler.log wrangler deploy",
+    "dry-run": "WRANGLER_LOG_PATH=.wrangler/wrangler.log wrangler deploy --dry-run",
+    "test": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vitest run",
+    "typecheck": "tsc --noEmit",
+    "types": "WRANGLER_LOG_PATH=.wrangler/wrangler.log wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.16.3",
+    "@types/node": "^24.0.0",
+    "@vitest/snapshot": "^4.1.5",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.5",
+    "wrangler": "^4.90.0"
+  }
+}

@@ -1,0 +1,15 @@
+.venv/
+node_modules/
+.config/
+.wrangler/
+dist/
+OmiSetup/
+.DS_Store
+__pycache__/
+.pytest_cache/
+*.egg-info/
+*.py[cod]
+.env
+.env*
+.dev.vars*
+!.dev.vars.example
